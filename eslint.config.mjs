@@ -18,7 +18,7 @@ const eslintConfig = defineConfig([
       'max-len': [
         'error',
         {
-          code: 66,
+          code: 60,
           tabWidth: 2,
           ignoreUrls: true,
           ignoreComments: true,

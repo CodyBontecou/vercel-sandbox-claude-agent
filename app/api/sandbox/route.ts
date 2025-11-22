@@ -61,7 +61,12 @@ export async function POST() {
     // Configure git with credentials for the agent to use
     const configGitUser = await sandbox.runCommand({
       cmd: 'git',
-      args: ['config', '--global', 'user.name', 'Claude Agent'],
+      args: [
+        'config',
+        '--global',
+        'user.name',
+        'Claude Agent',
+      ],
       stderr: process.stderr,
       stdout: process.stdout,
     });

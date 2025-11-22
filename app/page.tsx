@@ -24,7 +24,9 @@ export default function Home() {
       }
     } catch (error) {
       const errorMsg =
-        error instanceof Error ? error.message : 'Unknown error';
+        error instanceof Error
+          ? error.message
+          : 'Unknown error';
       setMessage(`Error: ${errorMsg}`);
     } finally {
       setIsLoading(false);
