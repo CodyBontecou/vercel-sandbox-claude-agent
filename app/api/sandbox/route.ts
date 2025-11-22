@@ -97,7 +97,9 @@ export async function POST() {
     });
 
     // Write credentials file
-    const credentialsContent = `https://x-access-token:${process.env.GIT_ACCESS_TOKEN}@github.com`;
+    const credentialsContent =
+      `https://x-access-token:` +
+      `${process.env.GIT_ACCESS_TOKEN}@github.com`;
     await sandbox.writeFiles([
       {
         path: '/tmp/git-credentials',
@@ -120,7 +122,8 @@ export async function POST() {
     console.log(`✓ Git credentials configured`);
     console.log(`Verifying SDK connection...`);
 
-    // Create a simple script to verify the SDK can be imported
+    // Create a simple script to verify
+    // the SDK can be imported
     const verifyScript = `
 import { query } from '@anthropic-ai/claude-agent-sdk';
 
