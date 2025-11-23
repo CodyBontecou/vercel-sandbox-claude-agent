@@ -5,7 +5,8 @@ import { useState } from 'react';
 export default function Home() {
   const [isLoading, setIsLoading] =
     useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] =
+    useState('');
 
   const handleRunSandbox = async () => {
     setIsLoading(true);
@@ -19,12 +20,17 @@ export default function Home() {
         }
       );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       if (response.ok) {
-        setMessage(`Success! ${data.message}`);
+        setMessage(
+          `Success! ${data.message}`
+        );
       } else {
-        setMessage(`Error: ${data.error}`);
+        setMessage(
+          `Error: ${data.error}`
+        );
       }
     } catch (error) {
       const errorMsg =
@@ -40,24 +46,30 @@ export default function Home() {
   return (
     <div
       className={
-        'flex min-h-screen items-center ' +
-        'justify-center bg-zinc-50 dark:bg-black'
+        'flex min-h-screen ' +
+        'items-center ' +
+        'justify-center ' +
+        'bg-zinc-50 dark:bg-black'
       }
     >
       <div
         className={
-          'flex flex-col items-center gap-6'
+          'flex flex-col ' +
+          'items-center gap-6'
         }
       >
         <button
           onClick={handleRunSandbox}
           disabled={isLoading}
           className={
-            'px-8 py-4 text-lg font-semibold ' +
-            'text-white bg-black rounded-lg ' +
+            'px-8 py-4 text-lg ' +
+            'font-semibold ' +
+            'text-white bg-black ' +
+            'rounded-lg ' +
             'hover:bg-zinc-800 ' +
             'disabled:bg-zinc-400 ' +
-            'disabled:cursor-not-allowed ' +
+            'disabled:cursor-' +
+            'not-allowed ' +
             'transition-colors ' +
             'dark:bg-white ' +
             'dark:text-black ' +
@@ -72,8 +84,10 @@ export default function Home() {
         {message && (
           <p
             className={
-              'max-w-md text-center text-sm ' +
-              'text-zinc-600 dark:text-zinc-400'
+              'max-w-md text-center ' +
+              'text-sm ' +
+              'text-zinc-600 ' +
+              'dark:text-zinc-400'
             }
           >
             {message}

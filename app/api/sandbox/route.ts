@@ -1,40 +1,49 @@
+// eslint-disable-next-line max-len
 import { NextResponse } from 'next/server';
 import ms from 'ms';
+// eslint-disable-next-line max-len
 import { Sandbox } from '@vercel/sandbox';
 
+/* eslint-disable max-len */
 export async function POST() {
   try {
-    const sandbox = await Sandbox.create({
-      source: {
-        url:
-          'https://github.com/' +
-          'codybontecou/blog.git',
-        type: 'git',
-        username: 'x-access-token',
-        password: process.env.GIT_ACCESS_TOKEN!,
-      },
-      resources: { vcpus: 4 },
-      timeout: ms('10m'),
-      runtime: 'node22',
-    });
+    const sandbox =
+      await Sandbox.create({
+        source: {
+          url:
+            'https://github.com/' +
+            'codybontecou/blog.git',
+          type: 'git',
+          username: 'x-access-token',
+          password:
+            process.env
+              .GIT_ACCESS_TOKEN!,
+        },
+        resources: { vcpus: 4 },
+        timeout: ms('10m'),
+        runtime: 'node22',
+      });
 
     console.log(
       `Sandbox created: ${sandbox.sandboxId}`
     );
-    console.log(`Installing Claude Code CLI...`);
+    console.log(
+      `Installing Claude Code CLI...`
+    );
 
     // Install Claude Code CLI globally
-    const installCLI = await sandbox.runCommand({
-      cmd: 'npm',
-      args: [
-        'install',
-        '-g',
-        '@anthropic-ai/claude-code',
-      ],
-      stderr: process.stderr,
-      stdout: process.stdout,
-      sudo: true,
-    });
+    const installCLI =
+      await sandbox.runCommand({
+        cmd: 'npm',
+        args: [
+          'install',
+          '-g',
+          '@anthropic-ai/claude-code',
+        ],
+        stderr: process.stderr,
+        stdout: process.stdout,
+        sudo: true,
+      });
 
     if (installCLI.exitCode != 0) {
       await sandbox.stop();
@@ -47,20 +56,25 @@ export async function POST() {
       );
     }
 
-    console.log(`✓ Claude Code CLI installed`);
-    console.log(`Installing Anthropic SDK...`);
+    console.log(
+      `✓ Claude Code CLI installed`
+    );
+    console.log(
+      `Installing Anthropic SDK...`
+    );
 
     // Install @anthropic-ai/sdk
     // in the working directory
-    const installSDK = await sandbox.runCommand({
-      cmd: 'npm',
-      args: [
-        'install',
-        '@anthropic-ai/claude-agent-sdk',
-      ],
-      stderr: process.stderr,
-      stdout: process.stdout,
-    });
+    const installSDK =
+      await sandbox.runCommand({
+        cmd: 'npm',
+        args: [
+          'install',
+          '@anthropic-ai/claude-agent-sdk',
+        ],
+        stderr: process.stderr,
+        stdout: process.stdout,
+      });
 
     if (installSDK.exitCode != 0) {
       await sandbox.stop();
@@ -73,8 +87,12 @@ export async function POST() {
       );
     }
 
-    console.log(`✓ Anthropic SDK installed`);
-    console.log(`Configuring git credentials...`);
+    console.log(
+      `✓ Anthropic SDK installed`
+    );
+    console.log(
+      `Configuring git credentials...`
+    );
 
     // Configure git with credentials
     // for the agent to use
@@ -127,7 +145,9 @@ export async function POST() {
     await sandbox.writeFiles([
       {
         path: '/tmp/git-credentials',
-        content: Buffer.from(credentialsContent),
+        content: Buffer.from(
+          credentialsContent
+        ),
       },
     ]);
 
@@ -138,13 +158,20 @@ export async function POST() {
     ) {
       await sandbox.stop();
       return NextResponse.json(
-        { error: 'Git configuration failed' },
+        {
+          error:
+            'Git configuration failed',
+        },
         { status: 500 }
       );
     }
 
-    console.log(`✓ Git credentials configured`);
-    console.log(`Verifying SDK connection...`);
+    console.log(
+      `✓ Git credentials configured`
+    );
+    console.log(
+      `Verifying SDK connection...`
+    );
 
     // Create a simple script to verify
     // the SDK can be imported
@@ -241,26 +268,33 @@ const result = query({
     await sandbox.writeFiles([
       {
         path: '/vercel/sandbox/verify.mjs',
-        content: Buffer.from(verifyScript),
+        content: Buffer.from(
+          verifyScript
+        ),
       },
     ]);
 
     // Run the verification script
-    const verifyRun = await sandbox.runCommand({
-      cmd: 'node',
-      args: ['verify.mjs'],
-      stderr: process.stderr,
-      stdout: process.stdout,
-      env: {
-        ANTHROPIC_API_KEY:
-          process.env.ANTHROPIC_API_KEY!,
-      },
-    });
+    const verifyRun =
+      await sandbox.runCommand({
+        cmd: 'node',
+        args: ['verify.mjs'],
+        stderr: process.stderr,
+        stdout: process.stdout,
+        env: {
+          ANTHROPIC_API_KEY:
+            process.env
+              .ANTHROPIC_API_KEY!,
+        },
+      });
 
     if (verifyRun.exitCode != 0) {
       await sandbox.stop();
       return NextResponse.json(
-        { error: 'SDK verification failed' },
+        {
+          error:
+            'SDK verification failed',
+        },
         { status: 500 }
       );
     }
@@ -302,3 +336,4 @@ const result = query({
     );
   }
 }
+/* eslint-enable max-len */

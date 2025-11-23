@@ -4,6 +4,7 @@ import {
 } from 'eslint/config';
 // eslint-disable-next-line max-len
 import vitals from 'eslint-config-next/core-web-vitals';
+// eslint-disable-next-line max-len
 import ts from 'eslint-config-next/typescript';
 
 const eslintConfig = defineConfig([
@@ -22,7 +23,7 @@ const eslintConfig = defineConfig([
       'max-len': [
         'error',
         {
-          code: 50,
+          code: 40,
           tabWidth: 2,
           ignoreUrls: true,
           ignoreComments: true,
