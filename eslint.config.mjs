@@ -1,10 +1,14 @@
-import { defineConfig, globalIgnores } from 'eslint/config';
-import nextVitals from 'eslint-config-next/core-web-vitals';
-import nextTs from 'eslint-config-next/typescript';
+import {
+  defineConfig,
+  globalIgnores,
+} from 'eslint/config';
+// eslint-disable-next-line max-len
+import vitals from 'eslint-config-next/core-web-vitals';
+import ts from 'eslint-config-next/typescript';
 
 const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
+  ...vitals,
+  ...ts,
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
@@ -18,7 +22,7 @@ const eslintConfig = defineConfig([
       'max-len': [
         'error',
         {
-          code: 60,
+          code: 50,
           tabWidth: 2,
           ignoreUrls: true,
           ignoreComments: true,

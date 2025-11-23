@@ -6,7 +6,9 @@ export async function POST() {
   try {
     const sandbox = await Sandbox.create({
       source: {
-        url: 'https://github.com/codybontecou/blog.git',
+        url:
+          'https://github.com/' +
+          'codybontecou/blog.git',
         type: 'git',
         username: 'x-access-token',
         password: process.env.GIT_ACCESS_TOKEN!,
@@ -16,13 +18,19 @@ export async function POST() {
       runtime: 'node22',
     });
 
-    console.log(`Sandbox created: ${sandbox.sandboxId}`);
+    console.log(
+      `Sandbox created: ${sandbox.sandboxId}`
+    );
     console.log(`Installing Claude Code CLI...`);
 
     // Install Claude Code CLI globally
     const installCLI = await sandbox.runCommand({
       cmd: 'npm',
-      args: ['install', '-g', '@anthropic-ai/claude-code'],
+      args: [
+        'install',
+        '-g',
+        '@anthropic-ai/claude-code',
+      ],
       stderr: process.stderr,
       stdout: process.stdout,
       sudo: true,
@@ -31,7 +39,10 @@ export async function POST() {
     if (installCLI.exitCode != 0) {
       await sandbox.stop();
       return NextResponse.json(
-        { error: 'Installing Claude Code CLI failed' },
+        {
+          error:
+            'Installing Claude Code CLI failed',
+        },
         { status: 500 }
       );
     }
@@ -39,10 +50,14 @@ export async function POST() {
     console.log(`✓ Claude Code CLI installed`);
     console.log(`Installing Anthropic SDK...`);
 
-    // Install @anthropic-ai/sdk in the working directory
+    // Install @anthropic-ai/sdk
+    // in the working directory
     const installSDK = await sandbox.runCommand({
       cmd: 'npm',
-      args: ['install', '@anthropic-ai/claude-agent-sdk'],
+      args: [
+        'install',
+        '@anthropic-ai/claude-agent-sdk',
+      ],
       stderr: process.stderr,
       stdout: process.stdout,
     });
@@ -50,7 +65,10 @@ export async function POST() {
     if (installSDK.exitCode != 0) {
       await sandbox.stop();
       return NextResponse.json(
-        { error: 'Installing Anthropic SDK failed' },
+        {
+          error:
+            'Installing Anthropic SDK failed',
+        },
         { status: 500 }
       );
     }
@@ -58,48 +76,54 @@ export async function POST() {
     console.log(`✓ Anthropic SDK installed`);
     console.log(`Configuring git credentials...`);
 
-    // Configure git with credentials for the agent to use
-    const configGitUser = await sandbox.runCommand({
-      cmd: 'git',
-      args: [
-        'config',
-        '--global',
-        'user.name',
-        'Claude Agent',
-      ],
-      stderr: process.stderr,
-      stdout: process.stdout,
-    });
+    // Configure git with credentials
+    // for the agent to use
+    const configGitUser =
+      await sandbox.runCommand({
+        cmd: 'git',
+        args: [
+          'config',
+          '--global',
+          'user.name',
+          'Claude Agent',
+        ],
+        stderr: process.stderr,
+        stdout: process.stdout,
+      });
 
-    const configGitEmail = await sandbox.runCommand({
-      cmd: 'git',
-      args: [
-        'config',
-        '--global',
-        'user.email',
-        'agent@example.com',
-      ],
-      stderr: process.stderr,
-      stdout: process.stdout,
-    });
+    const configGitEmail =
+      await sandbox.runCommand({
+        cmd: 'git',
+        args: [
+          'config',
+          '--global',
+          'user.email',
+          'agent@example.com',
+        ],
+        stderr: process.stderr,
+        stdout: process.stdout,
+      });
 
-    // Configure git credential helper to use the token
-    const configGitCredential = await sandbox.runCommand({
-      cmd: 'git',
-      args: [
-        'config',
-        '--global',
-        'credential.helper',
-        `store --file=/tmp/git-credentials`,
-      ],
-      stderr: process.stderr,
-      stdout: process.stdout,
-    });
+    // Configure git credential helper
+    // to use the token
+    const configGitCredential =
+      await sandbox.runCommand({
+        cmd: 'git',
+        args: [
+          'config',
+          '--global',
+          'credential.helper',
+          `store --file=/tmp/git-credentials`,
+        ],
+        stderr: process.stderr,
+        stdout: process.stdout,
+      });
 
     // Write credentials file
     const credentialsContent =
       `https://x-access-token:` +
-      `${process.env.GIT_ACCESS_TOKEN}@github.com`;
+      `${process.env.GIT_ACCESS_TOKEN}` +
+      `@github.com`;
     await sandbox.writeFiles([
       {
         path: '/tmp/git-credentials',
@@ -125,58 +149,62 @@ export async function POST() {
     // Create a simple script to verify
     // the SDK can be imported
     const verifyScript = `
-import { query } from '@anthropic-ai/claude-agent-sdk';
+import { query } from
+  '@anthropic-ai/claude-agent-sdk';
 
 console.log('SDK imported successfully');
 console.log('SDK is ready to use');
 
 const result = query({
         prompt:
-          "Write a new blog post about running " +
-          "Coding Agents in Sandbox environments. " +
-          "Then, create a Pull Request with your " +
-          "changes using the Github MCP's " +
-          "mcp__github__create_pull_request tool.",
+          "Write a new blog post about " +
+          "running Coding Agents in " +
+          "Sandbox environments. Then, " +
+          "create a Pull Request with " +
+          "your changes using the " +
+          "Github MCP's " +
+          "mcp__github__create_pull_request " +
+          "tool.",
         options: {
             permissionMode: 'acceptEdits',
             maxTurns: 20,
             allowedTools: [
-                      'Read',
-                      'Write',
-                      'Edit',
-                      'Bash',
-                      'Glob',
-                      'Grep',
-                      'mcp__github__create_branch',
-                      'mcp__github__create_pull_request',
-                      'mcp__github__list_pull_requests',
-                      'mcp__github__get_pull_request',
-                      'mcp__github__create_issue',
-                      'mcp__github__list_issues',
-                      'mcp__github__get_issue',
-                      'mcp__github__create_or_update_file',
-                      'mcp__github__search_repositories',
-                      'mcp__github__get_file_contents',
+             'Read',
+             'Write',
+             'Edit',
+             'Bash',
+             'Glob',
+             'Grep',
+             'mcp__github__create_branch',
+             'mcp__github__create_pull_request',
+             'mcp__github__list_pull_requests',
+             'mcp__github__get_pull_request',
+             'mcp__github__create_issue',
+             'mcp__github__list_issues',
+             'mcp__github__get_issue',
+             'mcp__github__create_or_update_file',
+             'mcp__github__search_repositories',
+             'mcp__github__get_file_contents',
             ],
             systemPrompt: {
                 type: 'preset',
                 preset: 'claude_code',
                 append:
                   'Focus on making minimal, ' +
-                  'targeted changes to fix the ' +
-                  'specific issue. Follow existing ' +
-                  'code patterns and style.',
+                  'targeted changes to fix ' +
+                  'the specific issue. Follow ' +
+                  'existing code patterns and ' +
+                  'style.',
             },
             mcpServers: {
               github: {
                   command: "npx",
-                  args: [
-                    "-y",
-                    "@modelcontextprotocol/server-github"
-                  ],
+                  args: ["-y",
+                    "@modelcontextprotocol/" +
+                    "server-github"],
                   env: {
-                      GITHUB_PERSONAL_ACCESS_TOKEN:
-                        "${process.env.GIT_ACCESS_TOKEN}"
+                   GITHUB_PERSONAL_ACCESS_TOKEN:
+                 "${process.env.GIT_ACCESS_TOKEN}"
                   }
               }
           },
@@ -192,8 +220,11 @@ const result = query({
           })
         )
 
-        if (message.type === 'result' && message.is_error) {
-            console.error('Agent completed with errors')
+        if (message.type === 'result' &&
+            message.is_error) {
+            console.error(
+              'Agent completed with errors'
+            )
             process.exit(1)
         }
     }
@@ -221,7 +252,8 @@ const result = query({
       stderr: process.stderr,
       stdout: process.stdout,
       env: {
-        ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY!,
+        ANTHROPIC_API_KEY:
+          process.env.ANTHROPIC_API_KEY!,
       },
     });
 
@@ -233,10 +265,13 @@ const result = query({
       );
     }
 
-    console.log(`✓ Anthropic SDK is properly connected`);
     console.log(
-      `\\nSuccess! Both Claude Code CLI and ` +
-        `Anthropic SDK are installed and ready to use.`
+      `✓ Anthropic SDK is properly connected`
+    );
+    console.log(
+      `\\nSuccess! Both Claude Code CLI ` +
+        `and Anthropic SDK are installed ` +
+        `and ready to use.`
     );
 
     // Stop the sandbox
@@ -245,11 +280,16 @@ const result = query({
 
     return NextResponse.json({
       success: true,
-      message: 'Sandbox execution completed successfully',
+      message:
+        'Sandbox execution completed ' +
+        'successfully',
       sandboxId: sandbox.sandboxId,
     });
   } catch (error) {
-    console.error('Error running sandbox:', error);
+    console.error(
+      'Error running sandbox:',
+      error
+    );
     return NextResponse.json(
       {
         error: 'Failed to run sandbox',
